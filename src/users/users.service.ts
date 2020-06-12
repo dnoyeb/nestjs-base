@@ -5,6 +5,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './user.entity';
 import { validate } from 'class-validator';
 import { UserRO } from './user.interface';
+import { UpdateUserDto } from './dto/update-user.dto';
 @Injectable()
 export class UsersService {
     constructor(
@@ -50,5 +51,24 @@ export class UsersService {
         };
 
         return { user: userRO };
+    }
+
+    async findOne(id: string) {
+        const user = await getRepository(UserEntity).findOne(id);
+
+        return user || { user: null }
+
+    }
+
+    async delete(id: number): Promise<DeleteResult> {
+        return await this.userRepository.delete({ id });
+    }
+
+    async update(userData: UpdateUserDto): Promise<UserEntity> {
+        let toUpdate = await this.userRepository.findOne(userData.userId);
+        delete toUpdate.password;
+
+        let updated = Object.assign(toUpdate, userData);
+        return await this.userRepository.save(updated);
     }
 }

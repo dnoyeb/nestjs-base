@@ -1,7 +1,6 @@
-export interface UserData {
+
+export interface UserRO {
+  user: {
     username: string;
-  }
-  
-  export interface UserRO {
-    user: UserData;
-  }
+  };
+}
