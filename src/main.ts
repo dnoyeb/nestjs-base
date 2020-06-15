@@ -1,9 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { ResponseInterceptor } from './interceptor/response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.useGlobalInterceptors(new ResponseInterceptor())
 
   const options = new DocumentBuilder()
     .setTitle('swagger案例')
@@ -20,11 +23,12 @@ async function bootstrap() {
       type: 'http',
       description: '描述',
       name: '名字',
-  })
+    })
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
   console.log('http://localhost:3000/api/')
+
   await app.listen(3000);
 }
 bootstrap();
