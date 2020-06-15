@@ -12,4 +12,7 @@ export class UserEntity {
     @Column()
     password: string;
 
+    comparePassword(password) {
+        return this.password === password
+    }
 }

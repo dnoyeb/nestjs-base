@@ -7,7 +7,7 @@ import { validate } from 'class-validator';
 import { UserRO } from './user.interface';
 import { UpdateUserDto } from './dto/update-user.dto';
 @Injectable()
-export class UsersService {
+export class UserService {
     constructor(
         @InjectRepository(UserEntity)
         private readonly userRepository: Repository<UserEntity>
@@ -46,18 +46,22 @@ export class UsersService {
     }
     private buildUserRO(user: UserEntity) {
         const userRO = {
-            id: user.id,
+            userId: user.id,
             username: user.username,
         };
 
         return { user: userRO };
     }
 
-    async findOne(id: string) {
+    async findOne(id: number) {
         const user = await getRepository(UserEntity).findOne(id);
 
         return user || { user: null }
 
+    }
+
+    async findByName(username: string) {
+        return await getRepository(UserEntity).findOne({ username });
     }
 
     async delete(id: number): Promise<DeleteResult> {
@@ -69,6 +73,6 @@ export class UsersService {
         delete toUpdate.password;
 
         let updated = Object.assign(toUpdate, userData);
-        return await this.userRepository.save(updated);
+        return this.userRepository.save(updated);
     }
 }

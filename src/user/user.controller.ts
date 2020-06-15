@@ -1,16 +1,17 @@
-import { Controller, Body, UsePipes, ValidationPipe, Post, Get, Delete, Param, Put, UseGuards, Request } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { Controller, Body, UsePipes, ValidationPipe, Post, Get, Delete, Param, Put, UseGuards } from '@nestjs/common';
+import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { AuthGuard } from '@nestjs/passport';
+// import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '../auth/auth.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('用户接口')
-@Controller('users')
+@Controller('user')
 export class UsersController {
     constructor(
-        private readonly userService: UsersService,
+        private readonly userService: UserService,
         private readonly authService: AuthService,
     ) { }
 
@@ -20,9 +21,11 @@ export class UsersController {
         return this.userService.create(userData);
 
     }
-
+   
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'))
     @Get(':id')
-    async findOne(@Param('id') id: string) {
+    async findOne(@Param('id') id: number) {
         return this.userService.findOne(id);
 
     }
@@ -34,19 +37,8 @@ export class UsersController {
 
     @UsePipes(new ValidationPipe())
     @Put()
-    async update(@Body('user') userData: UpdateUserDto) {
+    async update(@Body() userData: UpdateUserDto) {
         return await this.userService.update(userData);
     }
 
-    @UseGuards(AuthGuard('jwt'))
-    @Post('auth/login')
-    async login(@Request() req) {
-        return this.authService.createToken(req.user);
-    }
-
-    @UseGuards(AuthGuard('jwt'))
-    @Get('profile')
-    getProfile(@Request() req) {
-        return req.user;
-    }
 }

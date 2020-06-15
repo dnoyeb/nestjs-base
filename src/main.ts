@@ -9,7 +9,18 @@ async function bootstrap() {
     .setTitle('swagger案例')
     .setDescription('这是描述')
     .setVersion('1.0')
-    .addTag('用户')
+    .setTermsOfService('条款')
+    .setContact('联系', '网址', '邮件')
+    // .addServer('http://www.baidu.com', '域名代理')
+    .addTag('addTag标签', '描述', {
+      description: '描述1',
+      url: 'http://www.hao123.com'
+    })
+    .addBearerAuth({
+      type: 'http',
+      description: '描述',
+      name: '名字',
+  })
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
