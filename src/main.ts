@@ -2,12 +2,16 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ResponseInterceptor } from './interceptor/response.interceptor';
+import { HttpExceptionFilter } from './filter/http-exception.filter';
+import { ValidationPipe } from './pipe/validation.pipe';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalInterceptors(new ResponseInterceptor())
-
+  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalPipes(new ValidationPipe());
+  
   const options = new DocumentBuilder()
     .setTitle('swagger案例')
     .setDescription('这是描述')
