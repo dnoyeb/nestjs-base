@@ -7,11 +7,10 @@ import { ValidationPipe } from './pipe/validation.pipe';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
   app.useGlobalInterceptors(new ResponseInterceptor())
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(new ValidationPipe());
-  
+
   const options = new DocumentBuilder()
     .setTitle('swagger案例')
     .setDescription('这是描述')
