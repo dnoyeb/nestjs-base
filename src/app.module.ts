@@ -18,7 +18,7 @@ import { UserController } from './user/user.controller';
         port: 3306,
         username: 'root',
         password: 'Gitv2018',
-        database: 'TIKTOK',
+        database: 'NEWS',
         entities: [UserEntity],
         synchronize: true,
       }
